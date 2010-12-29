@@ -17,6 +17,7 @@ COMMENT=	A web based test management and test execution system
 USE_ZIP=	yes
 USE_PHP=	gd iconv mbstring
 WANT_PHP_WEB=	yes
+USE_DOS2UNIX=	yes
 NO_BUILD=	yes
 
 LICENSE=	GPLv2
@@ -25,7 +26,34 @@ LICENSE_FILE=	${WRKSRC}/LICENSE
 PORTDOCS=	*
 PORTEXAMPLES=	*
 
-post-extract:
+OPTIONS=	MYSQL	"MySQL back-end (use mysql PHP extension)" on \
+		PGSQL	"PostgreSQL back-end (use pgsql PHP extension)" off \
+		OPENLDAP	"Enable OpenLDAP support" off \
+		EXTJS	"Enable Ext JS support" on
+
+.include <bsd.port.pre.mk>
+
+.if defined(WITHOUT_MYSQL) && !defined(WITH_PGSQL)
+IGNORE=	needs at least one database back-end
+.endif
+
+.if defined(WITH_MYSQL)
+USE_PHP+=	mysql
+.endif
+
+.if defined(WITH_PGSQL)
+USE_PHP+=	pgsql
+.endif
+
+.if defined(WITH_OPENLDAP)
+USE_PHP+=	ldap
+.endif
+
+.if defined(WITH_EXTJS)
+USE_PHP+=	json
+.endif
+
+post-patch:
 .for f in CHANGELOG CODE_REUSE README TL-1.9-Prague-NEWS.txt
 	@${MV} ${WRKSRC}/${f} ${WRKSRC}/docs
 .endfor
@@ -37,7 +65,6 @@ post-extract:
 do-install:
 	@${MKDIR} ${WWWDIR}
 	@cd ${WRKSRC} && ${COPYTREE_SHARE} . ${WWWDIR}
-	@${CHOWN} -R ${WWWOWN}:${WWWGRP} ${WWWDIR}
 .if !defined(NOPORTDOCS)
 	@${MKDIR} ${DOCSDIR}
 	@cd ${WRKDIR}/docs && ${COPYTREE_SHARE} . ${DOCSDIR}
@@ -51,10 +78,14 @@ do-install:
 
 post-install:
 	@${RM} ${WWWDIR}/LICENSE
+	@${CHOWN} -R ${WWWOWN}:${WWWGRP} ${WWWDIR}
 
 x-generate-plist:
 	${FIND} ${WWWDIR} -type f | ${SORT} | ${SED} -e 's,${WWWDIR},%%WWWDIR%%,g' >> pkg-plist.new
 	${FIND} ${WWWDIR} -type d -depth | ${SORT} -r | ${SED} -e 's,${WWWDIR},@dirrm %%WWWDIR%%,g' >> pkg-plist.new
-	${ECHO} '@exec chown -R %%WWWOWN%%:%%WWWGRP%% %%WWWDIR%%' >> pkg-plist.new
+.for f in gui/templates_c logs upload_area
+	${ECHO} '@exec mkdir -p %D/%%WWWDIR%%/${f}' >> pkg-plist.new
+.endfor
+	${ECHO} '@exec chown -R www:www %D/%%WWWDIR%%' >> pkg-plist.new
 
-.include <bsd.port.mk>
+.include <bsd.port.post.mk>

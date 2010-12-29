@@ -18,6 +18,7 @@
 %%WWWDIR%%/custom/README
 %%WWWDIR%%/custom/_cf_radio_head.php
 %%WWWDIR%%/custom_config.inc.php.example
+%%PORTDOCS%%%%WWWDIR%%/docs
 %%WWWDIR%%/firstLogin.php
 %%WWWDIR%%/gui/drag_and_drop/css/context-menu.css
 %%WWWDIR%%/gui/drag_and_drop/css/drag-drop-folder-tree.css
@@ -3070,7 +3071,7 @@
 %%WWWDIR%%/third_party/user_contribution/migrate_cf_links.php
 %%WWWDIR%%/third_party/user_contribution/reassign_tc_id.php
 %%WWWDIR%%/third_party/xml-rpc/class-IXR.php
-@dirrm %%WWWDIR%%/upload_area
+@dirrmtry %%WWWDIR%%/upload_area
 @dirrm %%WWWDIR%%/third_party/xml-rpc
 @dirrm %%WWWDIR%%/third_party/user_contribution
 @dirrm %%WWWDIR%%/third_party/tinymce/jscripts/tiny_mce/utils
@@ -3525,7 +3526,7 @@
 @dirrm %%WWWDIR%%/gui/themes/default/css
 @dirrm %%WWWDIR%%/gui/themes/default
 @dirrm %%WWWDIR%%/gui/themes
-@dirrm %%WWWDIR%%/gui/templates_c
+@dirrmtry %%WWWDIR%%/gui/templates_c
 @dirrm %%WWWDIR%%/gui/templates/usermanagement
 @dirrm %%WWWDIR%%/gui/templates/testcases
 @dirrm %%WWWDIR%%/gui/templates/results
@@ -3545,9 +3546,11 @@
 @dirrm %%WWWDIR%%/gui/drag_and_drop/images
 @dirrm %%WWWDIR%%/gui/drag_and_drop/css
 @dirrm %%WWWDIR%%/gui/drag_and_drop
-@dirrm %%WWWDIR%%/gui
+@dirrmtry %%WWWDIR%%/gui
 @dirrm %%WWWDIR%%/custom
 @dirrm %%WWWDIR%%/cfg
-%%PORTDOCS%%%%WWWDIR%%/docs
 @dirrmtry %%WWWDIR%%
-@exec chown -R %%WWWOWN%%:%%WWWGRP%% %%WWWDIR%%
+@exec mkdir -p %D/%%WWWDIR%%/gui/templates_c
+@exec mkdir -p %D/%%WWWDIR%%/logs
+@exec mkdir -p %D/%%WWWDIR%%/upload_area
+@exec chown -R www:www %D/%%WWWDIR%%
