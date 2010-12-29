@@ -3553,4 +3553,4 @@
 @exec mkdir -p %D/%%WWWDIR%%/gui/templates_c
 @exec mkdir -p %D/%%WWWDIR%%/logs
 @exec mkdir -p %D/%%WWWDIR%%/upload_area
-@exec chown -R www:www %D/%%WWWDIR%%
+@exec chown -R %%WWWOWN%%:%%WWWGRP%% %D/%%WWWDIR%%

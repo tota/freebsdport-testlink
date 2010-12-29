@@ -19,6 +19,7 @@ USE_PHP=	gd iconv mbstring
 WANT_PHP_WEB=	yes
 USE_DOS2UNIX=	yes
 NO_BUILD=	yes
+PLIST_SUB=	WWWOWN=${WWWOWN} WWWGRP=${WWWGRP}
 
 LICENSE=	GPLv2
 LICENSE_FILE=	${WRKSRC}/LICENSE
@@ -86,6 +87,6 @@ x-generate-plist:
 .for f in gui/templates_c logs upload_area
 	${ECHO} '@exec mkdir -p %D/%%WWWDIR%%/${f}' >> pkg-plist.new
 .endfor
-	${ECHO} '@exec chown -R www:www %D/%%WWWDIR%%' >> pkg-plist.new
+	${ECHO} '@exec chown -R %%WWWOWN%%:%%WWWGRP%% %D/%%WWWDIR%%' >> pkg-plist.new
 
 .include <bsd.port.post.mk>
